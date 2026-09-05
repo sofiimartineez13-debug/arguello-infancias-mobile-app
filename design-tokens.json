@@ -1,0 +1,66 @@
+{
+  "$description": "Design tokens de Argüello Infancias Mobile. Fuente: skills/design.md. Consumido por tailwind.config.js.",
+  "color": {
+    "arguello": {
+      "blue": "#007AFF",
+      "bluePressed": "#0051D5",
+      "purple": "#7C3AED",
+      "teal": "#14B8A6"
+    },
+    "semantic": {
+      "success": "#28A745",
+      "warning": "#FFC107",
+      "streak": "#FF8A00",
+      "error": "#DC3545",
+      "errorPressed": "#BB2D3B",
+      "info": "#17A2B8"
+    },
+    "neutral": {
+      "textPrimary": "#0D132B",
+      "textSecondary": "#6B7280",
+      "textDisabled": "#9CA3AF",
+      "border": "#E5E7EB",
+      "surface": "#F6F7FB",
+      "background": "#FFFFFF"
+    },
+    "badge": {
+      "successBg": "#D1FAE5",
+      "successText": "#065F46",
+      "pendingBg": "#FEF3C7",
+      "pendingText": "#92400E",
+      "progressBg": "#DBEAFE",
+      "progressText": "#1E40AF",
+      "lockedBg": "#F3F4F6",
+      "lockedText": "#6B7280"
+    }
+  },
+  "font": {
+    "family": "Poppins",
+    "size": {
+      "caption": 11,
+      "bodySmall": 13,
+      "bodyMedium": 14,
+      "bodyLarge": 16,
+      "h4": 16,
+      "h3": 20,
+      "h2": 24,
+      "h1": 32
+    }
+  },
+  "spacing": {
+    "1": 2,
+    "2": 4,
+    "3": 8,
+    "4": 12,
+    "5": 16,
+    "6": 24,
+    "7": 32,
+    "8": 48
+  },
+  "radius": {
+    "sm": 4,
+    "md": 8,
+    "lg": 12,
+    "full": 9999
+  }
+}
