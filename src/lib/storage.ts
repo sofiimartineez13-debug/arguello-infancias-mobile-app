@@ -71,6 +71,5 @@ export const secure = {
 };
 
 export const STORAGE_KEYS = {
-  authSession: 'arguello.auth.session',
   uiTheme: 'arguello.ui.theme',
 } as const;

@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 
 import { SecondaryButton } from '@/components/ui/SecondaryButton';
+import { colors } from '@/theme';
 
 export type ErrorStateProps = {
   title?: string;
@@ -16,7 +17,7 @@ export function ErrorState({
 }: ErrorStateProps) {
   return (
     <View className="flex-1 items-center justify-center gap-3 p-8">
-      <Ionicons name="warning-outline" size={56} color="#DC3545" />
+      <Ionicons name="warning-outline" size={56} color={colors.error} />
       <Text className="text-center font-semibold text-h3 text-ink">{title}</Text>
       {message ? (
         <Text className="text-center text-body-sm text-ink-secondary">{message}</Text>

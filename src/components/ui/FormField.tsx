@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Pressable, Text, TextInput, View, type TextInputProps } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { colors } from '@/theme';
+
 export type FormFieldProps = TextInputProps & {
   label: string;
   error?: string;
@@ -27,7 +29,7 @@ export function FormField({ label, error, required, secure, ...inputProps }: For
         ].join(' ')}>
         <TextInput
           className="h-11 flex-1 text-body-md text-ink"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={colors.textDisabled}
           secureTextEntry={secure ? hidden : false}
           accessibilityLabel={label}
           {...inputProps}
@@ -38,7 +40,11 @@ export function FormField({ label, error, required, secure, ...inputProps }: For
             accessibilityLabel={hidden ? 'Mostrar contraseña' : 'Ocultar contraseña'}
             onPress={() => setHidden((v) => !v)}
             hitSlop={8}>
-            <Ionicons name={hidden ? 'eye-outline' : 'eye-off-outline'} size={20} color="#6B7280" />
+            <Ionicons
+              name={hidden ? 'eye-outline' : 'eye-off-outline'}
+              size={20}
+              color={colors.textSecondary}
+            />
           </Pressable>
         ) : null}
       </View>

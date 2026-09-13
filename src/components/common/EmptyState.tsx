@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
+import { colors } from '@/theme';
 
 export type EmptyStateProps = {
   title: string;
@@ -20,7 +21,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <View className="flex-1 items-center justify-center gap-3 p-8">
-      <Ionicons name={icon} size={56} color="#9CA3AF" />
+      <Ionicons name={icon} size={56} color={colors.textDisabled} />
       <Text className="text-center font-semibold text-h3 text-ink">{title}</Text>
       {description ? (
         <Text className="text-center text-body-sm text-ink-secondary">{description}</Text>

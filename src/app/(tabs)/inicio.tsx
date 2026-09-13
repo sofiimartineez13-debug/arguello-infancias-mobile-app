@@ -37,7 +37,9 @@ export default function InicioScreen() {
       <ScrollView contentContainerClassName="gap-6 px-5 py-4">
         <View className="gap-1">
           <Text className="text-body-sm text-ink-secondary">Hola,</Text>
-          <Text className="font-bold text-h1 text-ink">{user?.full_name ?? 'Educador/a'}</Text>
+          <Text className="font-bold text-h1 text-ink">
+            {user ? `${user.nombre} ${user.apellido}` : 'Educador/a'}
+          </Text>
         </View>
 
         {isLoading || !data ? (

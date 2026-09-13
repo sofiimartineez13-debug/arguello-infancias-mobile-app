@@ -1,22 +1,17 @@
 import type { User } from '@/types/user';
 
-/** Usuario educador de demostración (scaffold, sin backend). */
+/**
+ * Usuario educador de demostración — usado hoy solo para vincular los mocks
+ * de F2/F4/F5 (`data/actividades.ts`, `data/novedades.ts`, `data/turno.ts`,
+ * todavía sin conectar). El login real usa `authStore` contra Supabase Auth
+ * (ver src/store/authStore.ts); `findMockUser`/`MOCK_CREDENTIALS` se
+ * eliminaron acá porque ya nadie los llama.
+ */
 export const EDUCADOR_MOCK: User = {
   id: 'u-educador-1',
+  auth_user_id: 'u-educador-1',
   email: 'usuario@test.com',
-  full_name: 'Lucía Fernández',
-  role: 'educador',
+  nombre: 'Lucía',
+  apellido: 'Fernández',
+  role: 'Equipo Tecnico',
 };
-
-type MockCredential = { email: string; password: string; user: User };
-
-export const MOCK_CREDENTIALS: MockCredential[] = [
-  { email: 'usuario@test.com', password: 'password123', user: EDUCADOR_MOCK },
-];
-
-export function findMockUser(email: string, password: string): User | null {
-  const match = MOCK_CREDENTIALS.find(
-    (c) => c.email.toLowerCase() === email.trim().toLowerCase() && c.password === password,
-  );
-  return match?.user ?? null;
-}

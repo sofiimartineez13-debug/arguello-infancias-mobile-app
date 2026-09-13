@@ -8,9 +8,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { iniciales } from '@/utils/formatters';
 
 const ROLE_LABEL: Record<string, string> = {
-  educador: 'Educador/a',
-  operador_convivencial: 'Operador/a convivencial',
-  tecnico: 'Técnico/a',
+  Admin: 'Admin',
+  Administrador: 'Administrador/a',
+  'Equipo Tecnico': 'Equipo Técnico',
 };
 
 export default function PerfilScreen() {
@@ -30,8 +30,6 @@ export default function PerfilScreen() {
     ]);
   }
 
-  const [first = '', last = ''] = (user?.full_name ?? '').split(' ');
-
   return (
     <SafeAreaView className="flex-1 bg-canvas" edges={['top']}>
       <ScrollView contentContainerClassName="gap-6 px-5 py-4">
@@ -40,10 +38,12 @@ export default function PerfilScreen() {
         <View className="items-center gap-2">
           <View className="h-20 w-20 items-center justify-center rounded-full bg-arguello-blue/10">
             <Text className="font-semibold text-h2 text-arguello-blue">
-              {iniciales(first || 'A', last || 'I')}
+              {iniciales(user?.nombre || 'A', user?.apellido || 'I')}
             </Text>
           </View>
-          <Text className="font-semibold text-h3 text-ink">{user?.full_name}</Text>
+          <Text className="font-semibold text-h3 text-ink">
+            {user ? `${user.nombre} ${user.apellido}` : ''}
+          </Text>
           <Text className="text-body-sm text-ink-secondary">
             {ROLE_LABEL[user?.role ?? ''] ?? user?.role}
           </Text>

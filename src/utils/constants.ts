@@ -1,6 +1,6 @@
 /**
  * Enumeraciones y catálogos compartidos por tipos, schemas Zod y UI.
- * Fuente: especificación de funcionalidades del MVP (F1–F6).
+ * Fuente: docs/02-especificaciones/03-ARGUELLO-MOBILE-FEATURES.md
  */
 
 export const OBSERVATION_CATEGORIES = [
@@ -69,7 +69,13 @@ export const CRITICAL_INCIDENT_TYPE_LABELS: Record<CriticalIncidentType, string>
   otra: 'Otra',
 };
 
-export const RESIDENT_STATUSES = ['activo', 'egresado'] as const;
+/** Valores reales de `nnya.estado_actual` (CHECK constraint del schema). */
+export const RESIDENT_STATUSES = [
+  'En residencia',
+  'En proceso de egreso',
+  'Egresado',
+  'Fallecido',
+] as const;
 export type ResidentStatus = (typeof RESIDENT_STATUSES)[number];
 
 export const TASK_TYPES = ['medicacion', 'turno_medico', 'actividad_programada', 'otra'] as const;
@@ -81,6 +87,3 @@ export type TaskStatus = (typeof TASK_STATUSES)[number];
 /** Historial (F3): tipos de registro que se muestran en una línea de tiempo unificada. */
 export const HISTORY_ENTRY_KINDS = ['novedad', 'actividad', 'critica'] as const;
 export type HistoryEntryKind = (typeof HISTORY_ENTRY_KINDS)[number];
-
-/** Credenciales mock del scaffold (ver src/data/usuarios.ts). */
-export const MOCK_LOGIN_HINT = 'usuario@test.com / password123';

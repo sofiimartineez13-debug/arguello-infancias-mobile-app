@@ -7,7 +7,6 @@ import { FormField } from '@/components/ui/FormField';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { useAuth } from '@/hooks/useAuth';
 import { fieldErrors, LoginSchema } from '@/lib/validation';
-import { MOCK_LOGIN_HINT } from '@/utils/constants';
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -80,10 +79,6 @@ export default function LoginScreen() {
           </View>
 
           <PrimaryButton label="Ingresar" loading={submitting} onPress={onSubmit} />
-
-          <Text className="text-center text-caption text-ink-secondary">
-            Demo — usá {MOCK_LOGIN_HINT}
-          </Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

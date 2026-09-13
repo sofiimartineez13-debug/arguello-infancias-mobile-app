@@ -52,10 +52,13 @@ export function TaskStatusBadge({ status }: { status: TaskStatus }) {
   );
 }
 
+const RESIDENT_TONE: Record<ResidentStatus, Tone> = {
+  'En residencia': 'success',
+  'En proceso de egreso': 'pending',
+  Egresado: 'neutral',
+  Fallecido: 'critical',
+};
+
 export function ResidentStatusBadge({ status }: { status: ResidentStatus }) {
-  return status === 'activo' ? (
-    <StatusBadge label="Activo" tone="success" />
-  ) : (
-    <StatusBadge label="Egresado" tone="neutral" />
-  );
+  return <StatusBadge label={status} tone={RESIDENT_TONE[status]} />;
 }

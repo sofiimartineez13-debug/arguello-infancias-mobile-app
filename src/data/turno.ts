@@ -16,7 +16,7 @@ function turnoDeHoy(): Shift {
   return {
     id: 's-hoy',
     educator_id: EDUCADOR_MOCK.id,
-    educator_name: EDUCADOR_MOCK.full_name,
+    educator_name: `${EDUCADOR_MOCK.nombre} ${EDUCADOR_MOCK.apellido}`,
     starts_at: start.toISOString(),
     ends_at: end.toISOString(),
     status,

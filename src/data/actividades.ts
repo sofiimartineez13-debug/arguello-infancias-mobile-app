@@ -13,7 +13,7 @@ export const ACTIVIDADES_MOCK: Activity[] = [
     created_at: hace(6),
     updated_at: hace(6),
     created_by: EDUCADOR_MOCK.id,
-    created_by_name: EDUCADOR_MOCK.full_name,
+    created_by_name: `${EDUCADOR_MOCK.nombre} ${EDUCADOR_MOCK.apellido}`,
   },
   {
     id: 'a-2',
@@ -24,7 +24,7 @@ export const ACTIVIDADES_MOCK: Activity[] = [
     created_at: hace(5),
     updated_at: hace(5),
     created_by: EDUCADOR_MOCK.id,
-    created_by_name: EDUCADOR_MOCK.full_name,
+    created_by_name: `${EDUCADOR_MOCK.nombre} ${EDUCADOR_MOCK.apellido}`,
   },
   {
     id: 'a-3',
@@ -36,7 +36,7 @@ export const ACTIVIDADES_MOCK: Activity[] = [
     created_at: hace(28),
     updated_at: hace(28),
     created_by: EDUCADOR_MOCK.id,
-    created_by_name: EDUCADOR_MOCK.full_name,
+    created_by_name: `${EDUCADOR_MOCK.nombre} ${EDUCADOR_MOCK.apellido}`,
   },
   {
     id: 'a-4',
@@ -47,7 +47,7 @@ export const ACTIVIDADES_MOCK: Activity[] = [
     created_at: hace(50),
     updated_at: hace(50),
     created_by: EDUCADOR_MOCK.id,
-    created_by_name: EDUCADOR_MOCK.full_name,
+    created_by_name: `${EDUCADOR_MOCK.nombre} ${EDUCADOR_MOCK.apellido}`,
   },
 ];
 

@@ -47,19 +47,19 @@ export default function ResidentDetailScreen() {
     );
   }
 
-  const nombre = `${resident.first_name} ${resident.last_name}`;
+  const nombre = `${resident.nombre} ${resident.apellido}`;
 
   return (
     <SafeAreaView className="flex-1 bg-canvas" edges={['top']}>
-      <ScreenHeader title={nombre} subtitle={edadLabel(resident.birthdate)} />
+      <ScreenHeader title={nombre} subtitle={edadLabel(resident.fecha_nacimiento)} />
 
       <View className="flex-row items-center gap-3 px-5 pb-3">
         <View className="h-14 w-14 items-center justify-center rounded-full bg-arguello-blue/10">
           <Text className="font-semibold text-h4 text-arguello-blue">
-            {iniciales(resident.first_name, resident.last_name)}
+            {iniciales(resident.nombre, resident.apellido)}
           </Text>
         </View>
-        <ResidentStatusBadge status={resident.status} />
+        <ResidentStatusBadge status={resident.estado_actual} />
       </View>
 
       <View className="flex-row gap-2 border-b border-line px-5">
@@ -100,18 +100,21 @@ function Row({ label, value }: { label: string; value: string }) {
 function InfoTab({ resident }: { resident: Resident }) {
   return (
     <View className="gap-4 rounded-lg border border-line bg-canvas p-4">
-      <Row label="Nombre completo" value={`${resident.first_name} ${resident.last_name}`} />
-      <Row label="Fecha de nacimiento" value={formatFecha(resident.birthdate)} />
-      <Row label="Edad" value={edadLabel(resident.birthdate)} />
-      <Row label="Obra social" value={resident.health_insurance ?? 'Sin datos'} />
-      {resident.emergency_contact ? (
+      <Row label="Nombre completo" value={`${resident.nombre} ${resident.apellido}`} />
+      <Row label="Fecha de nacimiento" value={formatFecha(resident.fecha_nacimiento)} />
+      <Row label="Edad" value={edadLabel(resident.fecha_nacimiento)} />
+      <Row label="Obra social" value={resident.obra_social ?? 'Sin datos'} />
+      {resident.contacto_emergencia ? (
         <Row
           label="Contacto de emergencia"
-          value={`${resident.emergency_contact.name} (${resident.emergency_contact.relationship}) · ${resident.emergency_contact.phone}`}
+          value={`${resident.contacto_emergencia.nombre} ${resident.contacto_emergencia.apellido} (${resident.contacto_emergencia.parentesco})${resident.contacto_emergencia.telefono ? ` · ${resident.contacto_emergencia.telefono}` : ''}`}
         />
       ) : (
         <Row label="Contacto de emergencia" value="Sin datos" />
       )}
+      {resident.alertas_importantes ? (
+        <Row label="Alertas importantes" value={resident.alertas_importantes} />
+      ) : null}
     </View>
   );
 }

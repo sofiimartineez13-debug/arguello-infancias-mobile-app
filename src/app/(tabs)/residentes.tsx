@@ -22,7 +22,7 @@ export default function ResidentesScreen() {
     <SafeAreaView className="flex-1 bg-canvas" edges={['top']}>
       <View className="gap-1 px-5 pb-2 pt-2">
         <Text className="font-bold text-h1 text-ink">Residentes</Text>
-        <Text className="text-body-sm text-ink-secondary">NNA asignados a tu acompañamiento</Text>
+        <Text className="text-body-sm text-ink-secondary">Residentes de la institución</Text>
       </View>
 
       {isLoading ? (
@@ -42,7 +42,7 @@ export default function ResidentesScreen() {
             <EmptyState
               icon="people-outline"
               title="No hay residentes para mostrar"
-              description="No tenés NNA asignados en este momento."
+              description="No hay residentes activos en este momento."
             />
           }
         />

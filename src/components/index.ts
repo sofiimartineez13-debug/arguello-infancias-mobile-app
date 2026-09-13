@@ -9,6 +9,10 @@ export { FormField } from './ui/FormField';
 export { PrimaryButton } from './ui/PrimaryButton';
 export { ScreenHeader } from './ui/ScreenHeader';
 export { SecondaryButton } from './ui/SecondaryButton';
+export { SelectField } from './ui/SelectField';
+export type { SelectFieldProps, SelectOption } from './ui/SelectField';
+export { TextAreaField } from './ui/TextAreaField';
+export type { TextAreaFieldProps } from './ui/TextAreaField';
 export {
   ActivityStatusBadge,
   ResidentStatusBadge,
