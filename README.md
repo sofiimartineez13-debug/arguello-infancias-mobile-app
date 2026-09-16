@@ -27,9 +27,7 @@ reportar situaciones críticas.
 
 ## Estado actual
 
-Punto de partida (Unidad I): estructura del proyecto, componentes y navegación funcionando
-sobre datos estáticos (mock). Desde entonces se sumó un sistema de diseño centralizado y se
-conectó la autenticación y el listado de residentes (F1) a datos reales.
+Las 6 funcionalidades del MVP están completas y conectadas a datos reales (Supabase):
 
 - ✅ Aplicación navegable: login → pestañas (Inicio · Residentes · Mi turno · Crítica · Perfil)
 - ✅ Componentes reutilizables y tipados que reciben datos por props
@@ -40,28 +38,26 @@ conectó la autenticación y el listado de residentes (F1) a datos reales.
   (p. ej. `src/app/(tabs)/residentes.tsx`, `src/app/(tabs)/inicio.tsx`, `src/components/ResidentCard.tsx`)
 - ✅ Estado global con Zustand y capa de datos con React Query
 - ✅ TypeScript en modo estricto; tipos del dominio en `src/types/`
-- ✅ **Autenticación real** contra el backend (antes era un login simulado): sesión persistida en
-  el dispositivo, con control de acceso por rol
-- ✅ **F1 (Residentes) conectado a datos reales** del backend — el listado y el detalle ya no usan
-  datos estáticos
+- ✅ **Autenticación real** contra el backend: sesión persistida en el dispositivo, con control
+  de acceso por rol
+- ✅ **Las 6 funcionalidades conectadas a datos reales** — ninguna pantalla depende ya de datos
+  estáticos, salvo el horario del turno (ver nota en F5)
 
 | Funcionalidad | Estado |
 |---|---|
 | F1 — Consultar residentes | ✅ conectado a datos reales (listado + detalle) |
-| F2 — Registrar novedades | ⬜ tipos y validación listos; vista de solo lectura sobre datos mock |
-| F3 — Consultar historial | 🟡 timeline de solo lectura visible (datos mock) |
-| F4 — Registrar actividades | ⬜ tipos y validación listos; tarjetas y lista visibles (datos mock) |
-| F5 — Consultar turno | 🟡 pantalla "Mi turno" con resumen mock |
-| F6 — Situación crítica | 🟡 pantalla de advertencia diferenciada; formulario pendiente |
+| F2 — Registrar novedades | ✅ conectado a datos reales |
+| F3 — Consultar historial | ✅ timeline unificado (novedades + actividades + situaciones críticas), conectado a datos reales |
+| F4 — Registrar actividades | ✅ conectado a datos reales |
+| F5 — Consultar turno | ✅ novedades recientes y actividades de hoy conectadas a datos reales; el horario del turno sigue como dato de ejemplo porque la tabla de turnos de personal todavía no tiene datos cargados |
+| F6 — Situación crítica | ✅ conectado a datos reales, con registro de auditoría |
 
-## Features previstas (próximas unidades)
+## Próximas mejoras
 
-1. **F1** — búsqueda, filtrado y paginación de residentes.
-2. **F2** — formulario de novedades (categoría + descripción) con persistencia real, y filtro por categoría en la vista de solo lectura.
-3. **F3** — historial de seguimiento filtrable por fecha y tipo.
-4. **F4** — alta de actividades y marcado de realizadas, conectado a datos reales.
-5. **F5** — resumen consolidado del turno (residentes, novedades 24 h, tareas pendientes), conectado a datos reales.
-6. **F6** — reporte de situación crítica con registro de auditoría.
+1. Tests automatizados contra los criterios de aceptación de cada funcionalidad.
+2. Revisión de UI/UX de F2–F6 contra el sistema de diseño.
+3. Conectar el horario real del turno una vez que existan datos cargados.
+4. Resiliencia básica sin conexión (mostrar el último dato en caché) y paginación en listas largas.
 
 ## Instalación y ejecución
 
@@ -92,24 +88,29 @@ npx expo-doctor      # salud del proyecto
 
 ```
 src/
-  app/                   rutas (Expo Router, file-based)
-    (auth)/login.tsx     pantalla de login
-    (tabs)/              Inicio · Residentes · Mi turno · Crítica · Perfil
-    residentes/[id].tsx  detalle del residente (Info / Novedades / Historial / Actividades)
-  components/            UI reutilizable
-    ui/                  PrimaryButton, SecondaryButton, CriticalButton, StatusBadge, FormField, ScreenHeader
-    common/              LoadingState, EmptyState, ErrorState
+  app/                     rutas (Expo Router, file-based)
+    (auth)/login.tsx       pantalla de login
+    (tabs)/                Inicio · Residentes · Mi turno · Crítica · Perfil
+    residentes/[id].tsx    detalle del residente (Info / Novedades / Historial / Actividades)
+    nueva-novedad.tsx      alta de novedad (F2)
+    nueva-actividad.tsx    alta de actividad (F4)
+    situacion-critica.tsx  reporte de situación crítica (F6)
+    historial-detalle.tsx  detalle de una entrada del historial (F3)
+  components/              UI reutilizable
+    ui/                    PrimaryButton, SecondaryButton, CriticalButton, StatusBadge, FormField, ScreenHeader
+    common/                LoadingState, EmptyState, ErrorState
     ResidentCard.tsx  ActivityCard.tsx  AlertCard.tsx
-  hooks/                 useResidents (real), useObservations, useActivities, useShiftInfo (mock), useAuth
-  lib/                   validation (Zod), storage (AsyncStorage + SecureStore), supabase (cliente real), query-client
-  store/                 Zustand: authStore (sesión real), residentStore, uiStore
-  types/                 modelos del dominio (residente, novedad, actividad, turno, ...)
-  data/                  datos estáticos mock — F2/F4/F5, todavía sin conectar (residentes/usuarios quedan
-                         solo como fuente de esos mocks; F1 ya no los usa)
-  utils/                 constants (enums y labels), formatters (fecha/hora es-AR, edad)
-  theme/                 wrapper en TypeScript de design-tokens.json (colores, tipografía, espaciado)
-  global.css             directivas de Tailwind
-design-tokens.json       paleta y tipografía (consumido por tailwind.config.js y src/theme/)
+  hooks/                   una query/mutación de React Query por entidad real (useResidents,
+                           useObservations, useActivities, useCriticalIncidents, useShiftInfo, useAuth)
+  lib/                     validation (Zod), storage (AsyncStorage + SecureStore), supabase (cliente real), query-client
+  store/                   Zustand: authStore (sesión real), residentStore, uiStore
+  types/                   modelos del dominio, alineados a las tablas reales de Supabase
+  data/                    quedan solo los mocks que no tienen tabla real que consultar todavía
+                           (horario del turno) o que nunca la necesitaron (usuario demo del login)
+  utils/                   constants (enums y labels), formatters (fecha/hora es-AR, edad)
+  theme/                   wrapper en TypeScript de design-tokens.json (colores, tipografía, espaciado)
+  global.css               directivas de Tailwind
+design-tokens.json         paleta y tipografía (consumido por tailwind.config.js y src/theme/)
 ```
 
 ## Stack tecnológico
@@ -121,8 +122,8 @@ design-tokens.json       paleta y tipografía (consumido por tailwind.config.js 
 - **React Query** (`@tanstack/react-query`) — capa de data fetching
 - **Zod** — validación de formularios
 - **AsyncStorage** / **expo-secure-store** — persistencia local
-- **Supabase** (`@supabase/supabase-js`) — backend real: autenticación y F1 (residentes) ya conectados;
-  sesión persistida en `expo-secure-store`. F2–F6 siguen sobre datos mock mientras se conectan.
+- **Supabase** (`@supabase/supabase-js`) — backend real: autenticación y las 6 funcionalidades
+  (F1–F6) ya conectadas; sesión persistida en `expo-secure-store`.
 - Tipografía **Poppins**
 
 ## Diseño

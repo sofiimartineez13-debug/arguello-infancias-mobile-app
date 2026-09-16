@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Alert, ScrollView, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CriticalButton } from '@/components/ui/CriticalButton';
@@ -7,11 +8,7 @@ import { CRITICAL_INCIDENT_TYPE_LABELS } from '@/utils/constants';
 
 export default function CriticaScreen() {
   function onContinuar() {
-    // El flujo de reporte (WF-14/WF-15) se implementa en F6.
-    Alert.alert(
-      'Función en construcción',
-      'El formulario de reporte de situación crítica se implementa en la Feature F6.',
-    );
+    router.push('/situacion-critica');
   }
 
   return (
@@ -46,9 +43,6 @@ export default function CriticaScreen() {
 
         <View className="mt-auto gap-3">
           <CriticalButton label="Continuar con el reporte" onPress={onContinuar} />
-          <Text className="text-center text-caption text-white/80">
-            El formulario completo llega con la Feature F6.
-          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>

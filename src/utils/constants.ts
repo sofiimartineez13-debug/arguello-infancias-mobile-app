@@ -3,21 +3,24 @@
  * Fuente: docs/02-especificaciones/03-ARGUELLO-MOBILE-FEATURES.md
  */
 
+/** Valores reales del CHECK de `novedades.tipo` (verificado contra la DB, no el wireframe). */
 export const OBSERVATION_CATEGORIES = [
-  'conducta',
-  'emocional',
-  'educativo',
-  'sanitario',
-  'otro',
+  'Salud',
+  'Educación',
+  'Comportamiento',
+  'Alimentación',
+  'Visita Familiar',
+  'Otro',
 ] as const;
 export type ObservationCategory = (typeof OBSERVATION_CATEGORIES)[number];
 
 export const OBSERVATION_CATEGORY_LABELS: Record<ObservationCategory, string> = {
-  conducta: 'Conducta',
-  emocional: 'Emocional',
-  educativo: 'Educativo',
-  sanitario: 'Sanitario',
-  otro: 'Otro',
+  Salud: 'Salud',
+  Educación: 'Educación',
+  Comportamiento: 'Comportamiento',
+  Alimentación: 'Alimentación',
+  'Visita Familiar': 'Visita Familiar',
+  Otro: 'Otro',
 };
 
 export const ACTIVITY_TYPES = [
@@ -78,12 +81,17 @@ export const RESIDENT_STATUSES = [
 ] as const;
 export type ResidentStatus = (typeof RESIDENT_STATUSES)[number];
 
-export const TASK_TYPES = ['medicacion', 'turno_medico', 'actividad_programada', 'otra'] as const;
-export type TaskType = (typeof TASK_TYPES)[number];
-
-export const TASK_STATUSES = ['pendiente', 'completada'] as const;
-export type TaskStatus = (typeof TASK_STATUSES)[number];
-
 /** Historial (F3): tipos de registro que se muestran en una línea de tiempo unificada. */
 export const HISTORY_ENTRY_KINDS = ['novedad', 'actividad', 'critica'] as const;
 export type HistoryEntryKind = (typeof HISTORY_ENTRY_KINDS)[number];
+
+/**
+ * Algunos catálogos de `tipo` no tienen CHECK en la DB real y traen valores
+ * libres cargados desde la web que no están en las listas fijas de arriba
+ * (ej. "educativa"/"terapeutica" en actividades, "salud"/"conductual" en
+ * incidentes). Si no hay label, se muestra el valor crudo en vez de una
+ * etiqueta vacía.
+ */
+export function labelOrRaw(labels: Record<string, string>, value: string): string {
+  return labels[value] ?? value;
+}

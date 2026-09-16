@@ -1,10 +1,9 @@
-import type { Observation } from '@/types/observation';
-import type { Task } from '@/types/task';
-
 export type ShiftStatus = 'por_iniciar' | 'activo' | 'finalizado';
 
 /**
- * Turno del educador (F5). Vista consolidada del acompañamiento.
+ * Turno del educador (F5) — horario mostrado en "Mi turno". Todavía mock: la
+ * tabla real `turnos_personal` está vacía (sin datos ni feature que la
+ * pueble) — ver PLAN 12.
  */
 export type Shift = {
   id: string;
@@ -13,13 +12,4 @@ export type Shift = {
   starts_at: string; // ISO datetime
   ends_at: string; // ISO datetime
   status: ShiftStatus;
-  assigned_minor_ids: string[];
-};
-
-/** Resumen operativo que se muestra en "Mi turno". */
-export type ShiftSummary = {
-  shift: Shift;
-  recent_observations: Observation[]; // últimas 24 h
-  pending_tasks: Task[];
-  previous_shift_notes?: string;
 };

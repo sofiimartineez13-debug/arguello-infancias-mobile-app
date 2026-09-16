@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-import type { ActivityStatus, ResidentStatus, TaskStatus } from '@/utils/constants';
+import type { ActivityStatus, ResidentStatus } from '@/utils/constants';
 
 type Tone = 'success' | 'pending' | 'progress' | 'neutral' | 'critical';
 
@@ -42,14 +42,6 @@ const ACTIVITY_LABELS: Record<ActivityStatus, string> = {
 
 export function ActivityStatusBadge({ status }: { status: ActivityStatus }) {
   return <StatusBadge label={ACTIVITY_LABELS[status]} tone={ACTIVITY_TONE[status]} />;
-}
-
-export function TaskStatusBadge({ status }: { status: TaskStatus }) {
-  return status === 'completada' ? (
-    <StatusBadge label="Completada" tone="success" />
-  ) : (
-    <StatusBadge label="Pendiente" tone="pending" />
-  );
 }
 
 const RESIDENT_TONE: Record<ResidentStatus, Tone> = {

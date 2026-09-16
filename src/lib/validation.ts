@@ -5,7 +5,6 @@ import {
   ACTIVITY_TYPES,
   CRITICAL_INCIDENT_TYPES,
   OBSERVATION_CATEGORIES,
-  TASK_STATUSES,
 } from '@/utils/constants';
 
 export const LoginSchema = z.object({
@@ -14,11 +13,11 @@ export const LoginSchema = z.object({
 });
 export type LoginInput = z.infer<typeof LoginSchema>;
 
-/** F2 — Registrar novedad (CA-08 a CA-14). */
+/** F2 — Registrar novedad (CA-08 a CA-14). Campos alineados a la tabla real `novedades`. */
 export const ObservationSchema = z.object({
-  minor_id: z.string().min(1, 'Seleccioná un residente'),
-  category: z.enum(OBSERVATION_CATEGORIES, { message: 'Elegí un tipo de novedad' }),
-  content: z
+  nnya_id: z.string().min(1, 'Seleccioná un residente'),
+  tipo: z.enum(OBSERVATION_CATEGORIES, { message: 'Elegí un tipo de novedad' }),
+  descripcion: z
     .string()
     .trim()
     .min(10, 'La descripción debe tener al menos 10 caracteres')
@@ -26,37 +25,34 @@ export const ObservationSchema = z.object({
 });
 export type ObservationInput = z.infer<typeof ObservationSchema>;
 
-/** F4 — Registrar actividad (CA-25 a CA-30). */
+/**
+ * F4 — Registrar actividad (CA-25 a CA-30). `duration_minutes`/`participants`
+ * salen del schema: no existen en la tabla real `actividades` ni los pide WF-10.
+ */
 export const ActivitySchema = z.object({
-  minor_id: z.string().min(1, 'Seleccioná un residente'),
-  activity_type: z.enum(ACTIVITY_TYPES, { message: 'Elegí una actividad' }),
+  nnya_id: z.string().min(1, 'Seleccioná un residente'),
+  tipo: z.enum(ACTIVITY_TYPES, { message: 'Elegí una actividad' }),
   status: z.enum(ACTIVITY_STATUSES, { message: 'Elegí un estado' }),
-  observations: z.string().trim().max(500, 'Máximo 500 caracteres').optional(),
-  duration_minutes: z.coerce.number().int().positive().max(1440).optional(),
-  participants: z.string().trim().max(200).optional(),
+  observaciones: z.string().trim().max(500, 'Máximo 500 caracteres').optional(),
 });
 export type ActivityInput = z.infer<typeof ActivitySchema>;
 
-/** F6 — Reportar situación crítica (CA-43 a CA-47). */
+/**
+ * F6 — Reportar situación crítica (CA-43 a CA-47). Campos alineados a la
+ * tabla real `incidentes` (ver PLAN 08) — sin `people_notified`, no existe
+ * esa columna en la DB.
+ */
 export const CriticalIncidentSchema = z.object({
-  minor_ids: z.array(z.string().min(1)).min(1, 'Seleccioná al menos un residente'),
-  incident_type: z.enum(CRITICAL_INCIDENT_TYPES, { message: 'Elegí el tipo de situación' }),
-  description: z
+  nnya_ids: z.array(z.string().min(1)).min(1, 'Seleccioná al menos un residente'),
+  tipo: z.enum(CRITICAL_INCIDENT_TYPES, { message: 'Elegí el tipo de situación' }),
+  descripcion: z
     .string()
     .trim()
     .min(20, 'La descripción debe tener al menos 20 caracteres')
     .max(1000, 'Máximo 1000 caracteres'),
-  actions_taken: z.string().trim().max(1000).optional(),
-  people_notified: z.array(z.string().min(1)).optional(),
+  acciones_tomadas: z.string().trim().max(1000).optional(),
 });
 export type CriticalIncidentInput = z.infer<typeof CriticalIncidentSchema>;
-
-/** F5 — Actualizar estado de una tarea del turno. */
-export const TaskUpdateSchema = z.object({
-  id: z.string().min(1),
-  status: z.enum(TASK_STATUSES),
-});
-export type TaskUpdateInput = z.infer<typeof TaskUpdateSchema>;
 
 /** Aplana los errores de Zod a un mapa campo → primer mensaje. */
 export function fieldErrors(error: z.ZodError): Record<string, string> {

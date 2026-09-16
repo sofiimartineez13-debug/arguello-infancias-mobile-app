@@ -1,10 +1,12 @@
-import type { Shift, ShiftSummary } from '@/types/shift';
-import type { Task } from '@/types/task';
+import type { Shift } from '@/types/shift';
 import { EDUCADOR_MOCK } from '@/data/usuarios';
-import { NOVEDADES_MOCK } from '@/data/novedades';
-import { residentesAsignados } from '@/data/residentes';
 
-function turnoDeHoy(): Shift {
+/**
+ * Horario del turno de hoy — mock. La tabla real `turnos_personal` está
+ * vacía (sin datos ni feature que la pueble); se documenta en el PLAN 12 y
+ * se deja este mock hasta que haya algo real que consultar.
+ */
+export function turnoDeHoy(): Shift {
   const start = new Date();
   start.setHours(8, 0, 0, 0);
   const end = new Date();
@@ -20,53 +22,13 @@ function turnoDeHoy(): Shift {
     starts_at: start.toISOString(),
     ends_at: end.toISOString(),
     status,
-    assigned_minor_ids: residentesAsignados(EDUCADOR_MOCK.id).map((r) => r.id),
   };
 }
 
-const en = (horas: number) => new Date(Date.now() + horas * 3600_000).toISOString();
-
-export const TAREAS_MOCK: Task[] = [
-  {
-    id: 't-1',
-    type: 'medicacion',
-    title: 'Medicación de María (r-1)',
-    detail: 'Ibuprofeno 100 mg — cada 8 h según indicación',
-    due_at: en(1),
-    status: 'pendiente',
-    minor_id: 'r-1',
-  },
-  {
-    id: 't-2',
-    type: 'turno_medico',
-    title: 'Control pediátrico de María (r-1)',
-    detail: 'Centro de salud n.º 4, 16:00',
-    due_at: en(3),
-    status: 'pendiente',
-    minor_id: 'r-1',
-  },
-  {
-    id: 't-3',
-    type: 'actividad_programada',
-    title: 'Apoyo escolar grupal',
-    detail: 'Comedor, 17:30',
-    due_at: en(5),
-    status: 'pendiente',
-  },
-];
-
-export function shiftSummaryMock(): ShiftSummary {
-  const shift = turnoDeHoy();
-  const desde = Date.now() - 24 * 3600_000;
-  return {
-    shift,
-    recent_observations: NOVEDADES_MOCK.filter(
-      (o) => shift.assigned_minor_ids.includes(o.minor_id) && +new Date(o.observation_date) >= desde,
-    ).sort((a, b) => +new Date(b.observation_date) - +new Date(a.observation_date)),
-    pending_tasks: TAREAS_MOCK.filter((t) => t.status === 'pendiente').sort(
-      (a, b) => +new Date(a.due_at) - +new Date(b.due_at),
-    ),
-    previous_shift_notes:
-      'Turno anterior sin situaciones críticas. Sofía (r-3) durmió sin novedad; revisar entrega de materiales escolares de Juan (r-2).',
-  };
-}
+/**
+ * Notas del turno anterior — mock (WF-11 lo marca opcional/expandible,
+ * ningún CA lo exige en detalle; no hay tabla real de traspaso de turno
+ * conectada todavía).
+ */
+export const NOTAS_TURNO_ANTERIOR =
+  'Turno anterior sin situaciones críticas. Revisar entrega de materiales escolares pendientes.';

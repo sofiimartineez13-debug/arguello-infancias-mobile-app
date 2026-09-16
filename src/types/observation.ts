@@ -1,18 +1,23 @@
 import type { ObservationCategory } from '@/utils/constants';
 
 /**
- * Novedad del turno (F2). Una vez registrada es inmutable (trazabilidad).
+ * Novedad del turno (F2) — una fila de la tabla real `novedades`. Una vez
+ * registrada es inmutable (trazabilidad).
  */
 export type Observation = {
   id: string;
-  minor_id: string;
-  category: ObservationCategory;
-  content: string;
-  reported_by: string; // user id
-  reported_by_name: string;
-  observation_date: string; // ISO datetime
-  created_at: string; // ISO datetime
+  nnya_id: string;
+  usuario_id: string | null;
+  usuario_nombre: string | null; // nombre + apellido de usuarios, joineado al leer
+  tipo: ObservationCategory;
+  descripcion: string;
+  fecha_hora: string; // ISO datetime, default now() en la DB
+  created_at: string;
 };
 
-/** Payload para crear una novedad (fecha/hora y responsable se completan en el sistema). */
-export type NewObservation = Pick<Observation, 'minor_id' | 'category' | 'content'>;
+/** Payload para crear una novedad (fecha/hora y usuario se completan en el sistema). */
+export type NewObservation = {
+  nnya_id: string;
+  tipo: ObservationCategory;
+  descripcion: string;
+};

@@ -1,12 +1,21 @@
 {
   "expo": {
     "name": "Argüello Infancias",
-    "slug": "arguello-infancias-mobile",
+    "slug": "arguello-infancias-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "arguelloinfanciasmobile",
     "userInterfaceStyle": "light",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/39258f1c-91ce-4448-b0d8-315d051453c6"
+    },
     "ios": {
       "icon": "./assets/expo.icon",
       "bundleIdentifier": "com.arguello.infancias.mobile",
@@ -46,7 +55,11 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": {}
-    }
+      "router": {},
+      "eas": {
+        "projectId": "39258f1c-91ce-4448-b0d8-315d051453c6"
+      }
+    },
+    "owner": "dev2026js-team"
   }
 }

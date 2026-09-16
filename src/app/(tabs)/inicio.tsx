@@ -6,7 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CriticalButton } from '@/components/ui/CriticalButton';
 import { LoadingState } from '@/components/common/LoadingState';
 import { useAuth } from '@/hooks/useAuth';
-import { useShiftInfo } from '@/hooks/useShiftInfo';
+import { useActividadesDeHoy, useTurnoHoy } from '@/hooks/useShiftInfo';
+import { useResidents } from '@/hooks/useResidents';
 import { formatHora } from '@/utils/formatters';
 
 const SHIFT_STATUS_LABEL = {
@@ -30,7 +31,10 @@ const QUICK_ACTIONS: QuickAction[] = [
 
 export default function InicioScreen() {
   const { user } = useAuth();
-  const { data, isLoading } = useShiftInfo();
+  const turno = useTurnoHoy();
+  const residents = useResidents();
+  const actividades = useActividadesDeHoy();
+  const isLoading = turno.isLoading || residents.isLoading || actividades.isLoading;
 
   return (
     <SafeAreaView className="flex-1 bg-canvas" edges={['top']}>
@@ -42,7 +46,7 @@ export default function InicioScreen() {
           </Text>
         </View>
 
-        {isLoading || !data ? (
+        {isLoading || !turno.data ? (
           <View className="h-28">
             <LoadingState message="Cargando turno…" />
           </View>
@@ -51,15 +55,15 @@ export default function InicioScreen() {
             <View className="flex-row items-center justify-between">
               <Text className="font-semibold text-h4 text-ink">Turno de hoy</Text>
               <Text className="font-semibold text-caption text-arguello-blue">
-                {SHIFT_STATUS_LABEL[data.shift.status]}
+                {SHIFT_STATUS_LABEL[turno.data.status]}
               </Text>
             </View>
             <Text className="text-body-md text-ink">
-              {formatHora(data.shift.starts_at)} – {formatHora(data.shift.ends_at)}
+              {formatHora(turno.data.starts_at)} – {formatHora(turno.data.ends_at)}
             </Text>
             <Text className="text-body-sm text-ink-secondary">
-              {data.shift.assigned_minor_ids.length} NNA a cargo · {data.pending_tasks.length} tareas
-              pendientes
+              {residents.data?.length ?? 0} NNA a cargo · {actividades.data?.length ?? 0} actividades
+              de hoy
             </Text>
           </View>
         )}

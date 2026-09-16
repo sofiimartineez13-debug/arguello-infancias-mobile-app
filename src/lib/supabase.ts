@@ -4,8 +4,8 @@ import { secure } from '@/lib/storage';
 
 /**
  * Cliente Supabase. Sesión persistida en SecureStore (vía `secure` de
- * src/lib/storage.ts) — nunca en AsyncStorage plano (regla de AGENTS.md:
- * tokens JWT en SecureStore). Requiere definir en .env (ver .env.example):
+ * src/lib/storage.ts) — nunca en AsyncStorage plano (tokens JWT sensibles
+ * van en SecureStore). Requiere definir en .env (ver .env.example):
  *   EXPO_PUBLIC_SUPABASE_URL
  *   EXPO_PUBLIC_SUPABASE_ANON_KEY
  */

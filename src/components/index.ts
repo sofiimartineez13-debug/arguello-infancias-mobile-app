@@ -13,9 +13,4 @@ export { SelectField } from './ui/SelectField';
 export type { SelectFieldProps, SelectOption } from './ui/SelectField';
 export { TextAreaField } from './ui/TextAreaField';
 export type { TextAreaFieldProps } from './ui/TextAreaField';
-export {
-  ActivityStatusBadge,
-  ResidentStatusBadge,
-  StatusBadge,
-  TaskStatusBadge,
-} from './ui/StatusBadge';
+export { ActivityStatusBadge, ResidentStatusBadge, StatusBadge } from './ui/StatusBadge';

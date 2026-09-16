@@ -1,13 +1,16 @@
-import { Ionicons } from '@expo/vector-icons';
-import { ScrollView, Text, View } from 'react-native';
+import { router } from 'expo-router';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AlertCard } from '@/components/AlertCard';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ErrorState } from '@/components/common/ErrorState';
 import { LoadingState } from '@/components/common/LoadingState';
-import { useShiftInfo } from '@/hooks/useShiftInfo';
-import { OBSERVATION_CATEGORY_LABELS } from '@/utils/constants';
+import { ActivityStatusBadge } from '@/components/ui/StatusBadge';
+import { useActividadesDeHoy, useNovedadesRecientes, useTurnoHoy } from '@/hooks/useShiftInfo';
+import { useResidents } from '@/hooks/useResidents';
+import { NOTAS_TURNO_ANTERIOR } from '@/data/turno';
+import { ACTIVITY_TYPE_LABELS, OBSERVATION_CATEGORY_LABELS, labelOrRaw } from '@/utils/constants';
 import { formatHora } from '@/utils/formatters';
 
 const SHIFT_STATUS_LABEL = {
@@ -17,7 +20,14 @@ const SHIFT_STATUS_LABEL = {
 } as const;
 
 export default function TurnoScreen() {
-  const { data, isLoading, isError, refetch } = useShiftInfo();
+  const turno = useTurnoHoy();
+  const residents = useResidents();
+  const novedades = useNovedadesRecientes(24);
+  const actividades = useActividadesDeHoy();
+
+  const isLoading =
+    turno.isLoading || residents.isLoading || novedades.isLoading || actividades.isLoading;
+  const isError = turno.isError || residents.isError || novedades.isError || actividades.isError;
 
   if (isLoading) {
     return (
@@ -26,16 +36,30 @@ export default function TurnoScreen() {
       </SafeAreaView>
     );
   }
-  if (isError || !data) {
+  if (isError || !turno.data) {
     return (
       <SafeAreaView className="flex-1 bg-canvas" edges={['top']}>
-        <ErrorState onRetry={refetch} />
+        <ErrorState
+          onRetry={() => {
+            void turno.refetch();
+            void residents.refetch();
+            void novedades.refetch();
+            void actividades.refetch();
+          }}
+        />
       </SafeAreaView>
     );
   }
 
-  const { shift, recent_observations, pending_tasks, previous_shift_notes } = data;
-  const sinPendientes = recent_observations.length === 0 && pending_tasks.length === 0;
+  const shift = turno.data;
+  const nombreDe = (nnyaId: string) => {
+    const r = residents.data?.find((r) => r.id === nnyaId);
+    return r ? `${r.nombre} ${r.apellido}` : 'NNA';
+  };
+
+  const novedadesData = novedades.data ?? [];
+  const actividadesData = actividades.data ?? [];
+  const sinPendientes = novedadesData.length === 0 && actividadesData.length === 0;
 
   return (
     <SafeAreaView className="flex-1 bg-canvas" edges={['top']}>
@@ -55,7 +79,7 @@ export default function TurnoScreen() {
             </Text>
           </View>
           <Text className="text-body-sm text-ink-secondary">
-            {shift.assigned_minor_ids.length} NNA a cargo
+            {residents.data?.length ?? 0} NNA a cargo
           </Text>
         </View>
 
@@ -68,50 +92,63 @@ export default function TurnoScreen() {
         ) : (
           <>
             <Section title="Novedades relevantes (24 h)">
-              {recent_observations.length === 0 ? (
+              {novedadesData.length === 0 ? (
                 <Text className="text-body-sm text-ink-secondary">Sin novedades en las últimas 24 h.</Text>
               ) : (
-                recent_observations.map((o) => (
+                novedadesData.map((o) => (
                   <AlertCard
                     key={o.id}
                     variant="warning"
-                    title={OBSERVATION_CATEGORY_LABELS[o.category]}
-                    message={o.content}
+                    title={`${labelOrRaw(OBSERVATION_CATEGORY_LABELS, o.tipo)} · ${nombreDe(o.nnya_id)}`}
+                    message={o.descripcion}
+                    onPress={() =>
+                      router.push({
+                        pathname: '/historial-detalle',
+                        params: { kind: 'novedad', id: o.id, minorId: o.nnya_id },
+                      })
+                    }
                   />
                 ))
               )}
             </Section>
 
-            <Section title="Tareas pendientes">
-              {pending_tasks.length === 0 ? (
-                <Text className="text-body-sm text-ink-secondary">Sin tareas pendientes.</Text>
+            <Section title="Actividades de hoy">
+              {actividadesData.length === 0 ? (
+                <Text className="text-body-sm text-ink-secondary">Sin actividades para hoy.</Text>
               ) : (
-                pending_tasks.map((t) => (
-                  <View
-                    key={t.id}
-                    className="flex-row items-start gap-3 rounded-md border border-line bg-canvas p-3">
-                    <Ionicons name="alarm-outline" size={20} color="#B45309" />
+                actividadesData.map((a) => (
+                  <Pressable
+                    key={a.id}
+                    accessibilityRole="button"
+                    onPress={() =>
+                      router.push({
+                        pathname: '/historial-detalle',
+                        params: { kind: 'actividad', id: a.id, minorId: a.nnya_id },
+                      })
+                    }
+                    className="flex-row items-start gap-3 rounded-md border border-line bg-canvas p-3 active:bg-surface">
                     <View className="flex-1 gap-0.5">
-                      <Text className="font-semibold text-body-md text-ink">{t.title}</Text>
-                      {t.detail ? (
-                        <Text className="text-body-sm text-ink-secondary">{t.detail}</Text>
-                      ) : null}
-                      <Text className="text-caption text-ink-secondary">
-                        Vence {formatHora(t.due_at)}
+                      <Text className="font-semibold text-body-md text-ink">
+                        {labelOrRaw(ACTIVITY_TYPE_LABELS, a.tipo)}
                       </Text>
+                      <Text className="text-body-sm text-ink-secondary">{nombreDe(a.nnya_id)}</Text>
+                      {a.observaciones ? (
+                        <Text className="text-caption text-ink-secondary" numberOfLines={1}>
+                          {a.observaciones}
+                        </Text>
+                      ) : null}
                     </View>
-                  </View>
+                    <ActivityStatusBadge status={a.status} />
+                  </Pressable>
                 ))
               )}
             </Section>
           </>
         )}
 
-        {previous_shift_notes ? (
-          <Section title="Turno anterior">
-            <Text className="text-body-sm text-ink">{previous_shift_notes}</Text>
-          </Section>
-        ) : null}
+        <Section title="Turno anterior">
+          <Text className="text-body-sm text-ink">{NOTAS_TURNO_ANTERIOR}</Text>
+        </Section>
       </ScrollView>
     </SafeAreaView>
   );
